@@ -1,0 +1,31 @@
+.creature {
+  border: 1px solid gray;
+  width: 130px;
+  height: 150px;
+  border-radius: 5px;
+  margin: 0px 5px;
+}
+
+.creature.default {
+  background-color: lightgray;
+}
+
+.creature.tapped {
+  background-color: lightcoral;
+}
+
+.creature.active {
+  background-color: green;
+}
+
+td {
+  text-align: center;
+}
+
+.buffRow {
+  background-color: rgb(71, 71, 71);
+}
+
+.buffText {
+  color: rgb(255, 255, 255);
+}

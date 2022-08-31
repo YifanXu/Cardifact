@@ -1,0 +1,93 @@
+{
+  "move": "friendly",
+  "packetFor": "p1",
+  "turn": 1,
+  "friendly": {
+    "creatures": [
+      {
+        "atk": {
+          "suit": "spade",
+          "val": 4
+        },
+        "def": {
+          "suit": "heart",
+          "val": 13
+        },
+        "tap": false,
+        "atkBuff": null,
+        "defBuff": null
+      },
+      {
+        "atk": {
+          "suit": "club",
+          "val": 1
+        },
+        "def": {
+          "suit": "heart",
+          "val": 11
+        },
+        "tap": false,
+        "atkBuff": null,
+        "defBuff": null
+      }
+    ],
+    "health": [
+      {
+        "suit": "diamond",
+        "val": 6,
+        "revealed": true
+      },
+      {
+        "suit": "heart",
+        "val": 7,
+        "revealed": true
+      }
+    ],
+    "draw": [],
+    "hand": [
+      {
+        "suit": "diamond",
+        "val": 3
+      },
+      {
+        "suit": "club",
+        "val": 2
+      }
+    ]
+  },
+  "enemy": {
+    "creatures": [
+      {
+        "atk": {
+          "suit": "spade",
+          "val": 2
+        },
+        "def": {
+          "suit": "club",
+          "val": 9
+        },
+        "tap": false,
+        "atkBuff": {
+          "suit": "club",
+          "val": 10
+        },
+        "defBuff": null
+      }
+    ],
+    "health": [
+      {
+        "suit": "",
+        "val": 0
+      },
+      {
+        "suit": "",
+        "val": 0
+      },
+      {
+        "suit": "heart",
+        "val": 11
+      }
+    ],
+    "hand": 4
+  }
+}

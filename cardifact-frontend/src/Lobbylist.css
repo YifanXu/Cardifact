@@ -1,0 +1,50 @@
+h2 {
+  height: 50px;
+  line-height: 50px;
+  margin: 0px;
+}
+
+.lobbyContainer {
+  width: 100%;
+  height: calc(100% - 80px);
+  overflow-y: scroll;
+}
+
+.lobbytable {
+  width: 100%;
+}
+
+.nameColumn {
+  width: 50%
+}
+
+.nameColumn {
+  width: 50%
+}
+
+th, td {
+  border-bottom: 1px solid black;
+  padding: 0px;
+}
+
+tr {
+  height: 40px;
+  border-bottom: 1px solid black;
+}
+
+tr.highlighted {
+  background-color: greenyellow;
+}
+
+tr.normal:hover {
+  background-color: rgb(102, 112, 196);
+}
+
+.lobbyCreationForm {
+  height: 50px;
+  display: flex;
+}
+
+.lobbyCreationLabel {
+  padding-right: 10px;
+}

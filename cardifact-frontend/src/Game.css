@@ -1,0 +1,134 @@
+.enemyContainer {
+  display: flex;
+}
+.enemyInfo {
+  display: flex;
+  flex-direction: column;
+  float: right;
+  width: calc(100% - 506px);
+}
+
+.enemyInfo > p {
+  height: 50%;
+  line-height: 54px;
+  text-align: right; 
+  padding-right: 10px;
+  margin: 0px;
+}
+
+.cardCollection {
+  display: flex;
+  flex-direction: row;
+}
+
+.cardCollection.enemy.health {
+  width: 506px;
+}
+
+.friendly {
+  flex-direction: row-reverse;
+}
+
+.health {
+  border: 3px dotted red;
+}
+
+.cardCollection > div {
+  margin: 5px;
+}
+
+.cardCollection > p {
+  margin: 5px;
+}
+
+.creatures {
+  height: 25vh;
+  position: relative;
+}
+
+.creatures.enemy {
+  background-color: pink;
+}
+
+.creatures.friendly {
+  background-color: lightgreen;
+}
+
+.creaturesContainer {
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+  display: flex;
+  width: 100%;
+}
+
+.creaturePlaceholder {
+  border: 2px solid gray;
+  width: 130px;
+  height: 150px;
+  border-radius: 5px;
+  margin: 0px 5px;
+  text-align: center;
+  line-height: 150px;
+}
+
+.cardPlaceholder {
+  border: 2px solid black;
+  border-radius: 5px;
+  height: 90px;
+  width: 60px;
+  display: flex;
+  flex-direction: column;
+  background-color: lightgray;
+  text-align: center;
+  line-height: 90px;
+  margin-top: 5px;
+}
+
+.cardPlaceholder.white {
+  background-color: white;
+}
+
+.cardPlaceholder.green {
+  background-color: green;
+}
+
+.controlLine {
+  padding: 0px 5px;
+  height: 30px;
+  display: flex;
+  width: 100%;
+  background-color: azure;
+}
+
+.infoLine {
+  padding: 0px;
+  line-height: 30px;
+  margin: 0px;
+  width: 50%;
+}
+
+.infoLine.error {
+  background-color: lightcoral;
+  color: red;
+}
+
+.controlButton {
+  border: 1px solid black;
+  width: 16.7%;
+  margin: 0px;
+}
+
+.controlButton.active {
+  background-color: rgb(233, 145, 45);
+}
+
+.controlButton.disabled {
+  background-color: rgb(107, 101, 94);
+}
+
+.controlButton.active:hover {
+  background-color: rgb(177, 109, 32);
+}

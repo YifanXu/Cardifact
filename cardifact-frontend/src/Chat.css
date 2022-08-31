@@ -1,0 +1,41 @@
+.chatDisplay {
+  background-color: azure;
+  border: 1px solid black;
+  padding: 5px;
+  margin: 0px;
+  height: 90%;
+  display: flex;
+  flex-direction: column;
+  overflow-y: scroll;
+}
+
+.message {
+  margin: 0px;
+  padding: 0px;
+}
+
+.message.error {
+  background-color: rgb(236, 213, 217);
+  color: red;
+}
+
+.message.chatmsg:hover {
+  background-color: lightgray;
+}
+
+.inputArea {
+  width: 100%;
+  height: 10%;
+  display: flex;
+}
+
+.inputBox {
+  width: 70%;
+  resize: none;
+  font-size: large;
+}
+
+.submitButton {
+  width: 30%;
+  height: 100%;
+}
