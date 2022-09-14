@@ -1,17 +1,9 @@
 import './Creature.css'
 import Card from './Card'
 
-const symbols = {
-  'spade': '♠',
-  'heart': '♥',
-  'club': '♣',
-  'diamond': '♦'
-}
-const values = ['', 'A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K']
-
 export default function Creature (props) {
   return (
-    <table className={`creature ${props.val.tap ? 'tapped' : 'default'}`}>
+    <table className={`creature ${props.val.tap ? 'tapped' : 'default'} ${props.targeted ? 'targeted' : ''} ${props.selected ? 'selected' : (props.combat ? 'combat' : '')}`} onClick={props.onClick}>
       <thead>
         <tr>
           <th>ATK</th>

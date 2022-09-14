@@ -33,6 +33,16 @@
   border: 3px dotted red;
 }
 
+.health.targeted {
+  animation: healthTargetCycle 2s infinite;
+}
+
+@keyframes healthTargetCycle {
+  0% {background: rgb(245, 110, 0)}
+  50% {background: transparent}
+  100% {background: rgb(245, 110, 0)}
+}
+
 .cardCollection > div {
   margin: 5px;
 }
@@ -100,7 +110,11 @@
   height: 30px;
   display: flex;
   width: 100%;
-  background-color: azure;
+  background-color: rgb(210, 255, 255);
+}
+
+.controlLine.red {
+  background-color: rgb(255, 210, 210);
 }
 
 .infoLine {
@@ -108,11 +122,6 @@
   line-height: 30px;
   margin: 0px;
   width: 50%;
-}
-
-.infoLine.error {
-  background-color: lightcoral;
-  color: red;
 }
 
 .controlButton {

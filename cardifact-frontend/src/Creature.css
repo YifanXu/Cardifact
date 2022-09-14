@@ -1,5 +1,5 @@
 .creature {
-  border: 1px solid gray;
+  border: 2px solid gray;
   width: 130px;
   height: 150px;
   border-radius: 5px;
@@ -14,8 +14,40 @@
   background-color: lightcoral;
 }
 
+.creature.selected {
+  border: 2px solid blue;
+}
+
+.creature.combat {
+  border: 2px solid red;
+}
+
+.creature.targeted.default {
+  animation: creatureTargetDefaultCycle 2s infinite
+}
+
+.creature.targeted.tapped {
+  animation: creatureTargetTappedCycle 2s infinite
+}
+
+@keyframes creatureTargetDefaultCycle {
+  0% {background: rgb(245, 110, 0)}
+  50% {background: lightgray}
+  100% {background: rgb(245, 110, 0)}
+}
+
+@keyframes creatureTargetTappedCycle {
+  0% {background: rgb(245, 110, 0)}
+  50% {background: lightcoral}
+  100% {background: rgb(245, 110, 0)}
+}
+
 .creature.active {
   background-color: green;
+}
+
+thead > tr {
+  height: 25px;
 }
 
 td {
@@ -24,6 +56,7 @@ td {
 
 .buffRow {
   background-color: rgb(71, 71, 71);
+  height: 25px;
 }
 
 .buffText {

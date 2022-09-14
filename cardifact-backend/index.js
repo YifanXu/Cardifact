@@ -121,6 +121,7 @@ wss.on('connection', (socket, req) => {
             }
           })
           clientList[socket.id].gameId = dataVal.payload
+          clientList[socket.id].position = 'p1'
         }
         break
       case 'joinLobby':
@@ -139,6 +140,7 @@ wss.on('connection', (socket, req) => {
         else {
           lobbies[dataVal.payload].players.push(socket.id)
           clientList[socket.id].gameId = dataVal.payload
+          clientList[socket.id].position = 'p2'
           // Broadcast everyone else in lobby screen
           wss.clients.forEach(client => {
             if (client.id && !clientList[client.id].gameId) {
@@ -154,6 +156,24 @@ wss.on('connection', (socket, req) => {
           })
         }
         break
+      case 'game':
+        // Since it's a game action, therefore there has to be a game for this client
+        if (!socket.id) {
+          socket.send(JSON.stringify({msgType: 'error', payload: 'Requires ID!'}))
+          return
+        }
+        const gameId = clientList[socket.id].gameId
+        if (!gameId) {
+          socket.send(JSON.stringify({msgType: 'error', payload: 'Must be in a lobby to execute game actions'}))
+          return
+        }
+        if (!gameRefs[gameId]){
+          socket.send(JSON.stringify({msgType: 'error', payload: 'Lobby Name does not exist'}))
+        }
+        else {
+          let res = gameRefs[gameId].handleAction(clientList[socket.id].position, dataVal.payload)
+          if (res) socket.send(JSON.stringify(res))
+        }
     }
   });
 })

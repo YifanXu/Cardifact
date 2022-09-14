@@ -70,12 +70,13 @@ class App extends React.Component {
           })
           break
         case 'error':
+        case 'info':
           this.setState({
             chatlog: [...this.state.chatlog, {
               timestamp: Date.now(),
               source: 'System',
               content: msgJson.payload,
-              msgType: 'error',
+              msgType: msgJson.msgType,
             }]
           })
           break
@@ -95,18 +96,38 @@ class App extends React.Component {
     this.socket.send(JSON.stringify({msgType, payload}))
   }
 
-  sendChatMsg (msg) {
-    this.setState({
-      chatlog: [
-        ...this.state.chatlog,
-        {
-          timestamp: Date.now(),
-          source: 'You',
-          content: msg,
-          msgType: 'chatmsg'
-        }
-      ]
+  sendGameAction (actionType, cards, creatures) {
+    this.sendToServer('game', {
+      action: actionType,
+      cards,
+      creatures
     })
+  }
+
+  sendChatMsg (msg) {
+    if (msg.startsWith('/')) {
+      // This is a command
+      switch (msg) {
+        case '/forceUpdate':
+          this.sendGameAction('state')
+          break
+        default:
+          this.addSysMsg({msgType: 'error', content: `Unknown command ${msg}`})
+      }
+    }
+    else {
+      this.setState({
+        chatlog: [
+          ...this.state.chatlog,
+          {
+            timestamp: Date.now(),
+            source: 'You',
+            content: msg,
+            msgType: 'chatmsg'
+          }
+        ]
+      })
+    }
   }
 
   addSysMsg (msgBloc) {
@@ -128,7 +149,7 @@ class App extends React.Component {
     return (
       <div className="app">
         {this.state.gameState
-         ? <Game game={this.state.gameState} addChat={msg => this.addSysMsg(msg)} sendToServer={this.sendToServer.bind(this)}/>
+         ? <Game key={this.state.gameState.key} game={this.state.gameState} addChat={msg => this.addSysMsg(msg)} sendGameAction={this.sendGameAction.bind(this)}/>
          : <Lobbylist 
               lobbies={this.state.lobbies} 
               addChat={msg => this.addSysMsg(msg)} 

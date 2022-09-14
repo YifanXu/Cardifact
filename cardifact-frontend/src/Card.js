@@ -21,6 +21,7 @@ export default function Card (props) {
     </div>)
   }
   return (<div className={`card ${colorClass[props.suit]} ${props.disabled ? "disabled" : ""} ${props.selected ? "selected" : ""}`} onClick={e => props.onClick ? props.onClick(e) : null}>
+    {props.selected ? <span>{props.selected}</span> : null}
     <p className='topleft'>{values[props.val]}</p>
     <p className='midSymbol'>{symbols[props.suit]}</p>
     <p className='botRight'>{values[props.val]}</p>
