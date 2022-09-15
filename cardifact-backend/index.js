@@ -15,35 +15,12 @@ const lobbies = {}
 // Holds references to game objects. Keyed with Game ID
 const gameRefs = {}
 
-app.get('/', (req, res) => {
-  res.send('hello world!')
-})
+app.use('/', express.static('../cardifact-frontend/build'))
 
-app.get('/game/:id', (req,res) => {
-  const gameId = req.params.id
-})
-
-server.listen(8000)
+server.listen(443)
 
 const wss = new WebSocketServer({server})
 wss.on('connection', (socket, req) => {
-  // let queryParams = qs.parse(req.url.substring(req.url.indexOf('?') + 1))
-  // let id = queryParams.id
-  // if (!queryParams.id) {
-  //   console.log('closing socket!!!! No id')
-  //   socket.close()
-  // }
-  // else {
-  //   if (clientList[id]) {
-  //     clientList[id].close()
-  //   }
-  //   clientList[id] = socket
-  //   socket.id = id
-  // }
-  // socket.id = randomUUID()
-  // socket.send(JSON.stringify({msgType: 'id', payload: socket.id}))
-  // socket.send(JSON.stringify({msgType: 'lobbylist', payload: Object.keys(lobbies)}))
-
   socket.connectionTimeout = setTimeout(() => {
     socket.close()
   }, 10000)
@@ -174,6 +151,27 @@ wss.on('connection', (socket, req) => {
           let res = gameRefs[gameId].handleAction(clientList[socket.id].position, dataVal.payload)
           if (res) socket.send(JSON.stringify(res))
         }
+      case 'alias':
+        if (dataVal.payload && typeof dataVal.payload !== 'string' && dataVal.payload.trim().length !== 0) {
+          socket.send(JSON.stringify({msgType: 'error', payload: 'Alias must be a string'}))
+        }
+        else {
+          socket.send(JSON.stringify({msgType: 'info', payload: `Alias set to '${dataVal.payload.trim()}'`}))
+          socket.alias = dataVal.payload.trim()
+        }
+        break
+      case 'chatmsg':
+        if (!socket.id) {
+          socket.send(JSON.stringify({msgType: 'error', payload: 'Requires ID!'}))
+          return
+        }
+        
+        const chatroomId = clientList[socket.id].gameId
+        wss.clients.forEach(client => {
+          if ((!chatroomId && (!client.id || !clientList[client.id].gameId)) || chatroomId === clientList[client.id].gameId) {
+            client.send(JSON.stringify({msgType: 'chatmsg', payload: {source: socket.alias || socket.id.slice(-4), message: dataVal.payload}}))
+          }
+        })
     }
   });
 })

@@ -11,12 +11,6 @@ class App extends React.Component {
     this.state = {
       gameState: null,
       chatlog: [
-        {
-          timestamp: Date.now(),
-          source: 'yourmom',
-          content: 'get rekt kiddo',
-          msgType: 'chatmsg',
-        }
       ],
       lobbies: []
     }
