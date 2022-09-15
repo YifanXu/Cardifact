@@ -1,5 +1,6 @@
 import './Chat.css'
 import { useState } from 'react'
+import dateToString from './util/dateToString'
 
 export default function Chat (props) {
 
@@ -9,10 +10,8 @@ export default function Chat (props) {
     setmsgInput('')
     e.preventDefault()
   }
-  const addZero = (n) => n < 10 ? `0${n}` : n
   const messages = props.content.map((msg,i) => {
-    const dateObj = new Date(msg.timestamp)
-    return <p key={i} className={`message ${msg.msgType}`}><b>{`[${addZero(dateObj.getHours())}:${addZero(dateObj.getMinutes())}:${addZero(dateObj.getSeconds())}]`}<span>{msg.source}</span></b>: {msg.content}</p>
+    return <p key={i} className={`message ${msg.msgType}`}><b>{`[${dateToString(msg.timestamp)}]`}<span>{msg.source}</span></b>: {msg.content}</p>
   })
   return (
     <div className='chat'>

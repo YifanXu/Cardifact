@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import './Lobbylist.css'
+import dateToString from './util/dateToString'
 
 export default function Lobbylist (props) {
   let [filter, setFilter] = useState('')
@@ -36,8 +37,8 @@ export default function Lobbylist (props) {
           <tbody>
             {Object.entries(props.lobbies).map(([lobbyName, info]) => <tr onClick={e => props.joinLobby(lobbyName)} key={lobbyName} className={(id && info.players.includes(id)) ? 'highlighted' : 'normal'}>
               <td className='nameColumn'>{lobbyName}</td>
-              <td className='timeColumn'>{info.createdAt}</td>
-              <td className='statusColumn'>{info.ingame ? 'In Progress' : 'Open'}</td>
+              <td className='timeColumn'>{dateToString(info.createdAt)}</td>
+              <td className='statusColumn'>{info.inGame ? 'In Progress' : 'Open'}</td>
             </tr>)}
           </tbody>
         </table>

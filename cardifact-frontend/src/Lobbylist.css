@@ -6,7 +6,7 @@ h2 {
 
 .lobbyContainer {
   width: 100%;
-  height: calc(100% - 80px);
+  height: calc(100% - 100px);
   overflow-y: scroll;
 }
 

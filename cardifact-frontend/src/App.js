@@ -48,11 +48,22 @@ class App extends React.Component {
           localStorage.setItem('id', msgJson.payload)
           break
         case 'lobbylist':
+          // Check if we are in game
+          const id = localStorage.getItem('id')
+          for (const lobby of Object.values(msgJson.payload)) {
+            if(lobby.inGame && lobby.players.includes(id)) {
+              this.sendGameAction('state')
+              break
+            }
+          }
           this.setState({
             lobbies: msgJson.payload
           })
           break
         case 'gameState':
+          if (!this.state.gameState) {
+            this.addSysMsg ({msgType: 'info', content: 'You are now in game chat.'})
+          }
           this.setState({
             gameState: msgJson.payload
           })
@@ -112,9 +123,15 @@ class App extends React.Component {
           break
         case '/alias':
           if (args[1]) this.sendToServer('alias', args[1])
+          else this.addSysMsg({msgType: 'error', content: `Usage: /alias [userName]`})
+          break
+        case '/ff':
+        case '/forfeit':
+        case '/surrender':
+          this.sendGameAction('forfeit')
           break
         default:
-          this.addSysMsg({msgType: 'error', content: `Unknown command ${msg}`})
+          this.addSysMsg({msgType: 'error', content: `Unknown command ${args[0]}`})
       }
     }
     else {
@@ -133,15 +150,18 @@ class App extends React.Component {
     })
   }
 
-  createNewLobby() {
-    
+  onGameEnd() {
+    this.setState({gameState: null})
+    this.sendToServer('clearGameId') // Marks as being back in the lobbies for chat purposes
+    this.sendToServer('lobbylist')
+    this.addSysMsg ({msgType: 'info', content: 'You are now in global chat.'})
   }
 
   render() {
     return (
       <div className="app">
         {this.state.gameState
-         ? <Game key={this.state.gameState.key} game={this.state.gameState} addChat={msg => this.addSysMsg(msg)} sendGameAction={this.sendGameAction.bind(this)}/>
+         ? <Game key={this.state.gameState.key} game={this.state.gameState} addChat={msg => this.addSysMsg(msg)} sendGameAction={this.sendGameAction.bind(this)} endGame={this.onGameEnd.bind(this)}/>
          : <Lobbylist 
               lobbies={this.state.lobbies} 
               addChat={msg => this.addSysMsg(msg)} 

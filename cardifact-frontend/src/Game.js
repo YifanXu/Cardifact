@@ -358,8 +358,9 @@ class Game extends React.Component {
           enemyCreatureSelector: falseDelegate,
           friendlyCreatureSelector: falseDelegate,
           cardSelector: falseDelegate,
-          msg: 'Game Over.',
-          primary: null,
+          msg: this.props.game.move === this.props.game.packetFor ? 'Victory!' : 'Defeat.',
+          primary: 'Back to Lobbies',
+          primaryFunc: () => this.props.endGame(),
           secondary: null,
           cancel: null
         }
@@ -431,7 +432,7 @@ class Game extends React.Component {
           {this.buildCardCollection(this.props.game.friendly.health, 7, c=>c.revealed)}
         </div>
         <div className="friendlyInfo">
-          <div className={`controlLine ${uiState.msg === 'Enemy Turn' ? 'red' : ''}`}>
+          <div className={`controlLine ${(this.props.game.move === 'both' || this.props.game.move === this.props.game.packetFor) ? '' : 'red'}`}>
             <p className='infoLine'>{uiState.msg}</p>
             <button className={`controlButton ${uiState.cancel ? 'active' : 'disabled'}`} onClick={uiState.cancel ? uiState.cancelFunc : null}>{uiState.cancel}</button>
             <button className={`controlButton ${uiState.secondary ? 'active' : 'disabled'}`} onClick={uiState.secondary ? uiState.secondaryFunc : null}>{uiState.secondary}</button>

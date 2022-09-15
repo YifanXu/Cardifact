@@ -112,11 +112,12 @@ wss.on('connection', (socket, req) => {
           else if (!lobbies[dataVal.payload]){
             socket.send(JSON.stringify({msgType: 'error', payload: 'Lobby Name does not exist'}))
           }
-          else if (!lobbies[dataVal.payload].players.length >= 2) {
+          else if (lobbies[dataVal.payload].players.length >= 2) {
             socket.send(JSON.stringify({msgType: 'error', payload: 'Lobby is Full!'}))
           }
           else {
             lobbies[dataVal.payload].players.push(socket.id)
+            lobbies[dataVal.payload].inGame = true
             clientList[socket.id].gameId = dataVal.payload
             clientList[socket.id].position = 'p2'
             // Broadcast everyone else in lobby screen
@@ -131,6 +132,15 @@ wss.on('connection', (socket, req) => {
             gameRefs[dataVal.payload] = new Game(null, {
               p1: clientList[lobbies[dataVal.payload].players[0]].socket,
               p2: clientList[lobbies[dataVal.payload].players[1]].socket
+            }, () => {
+              lobbies[dataVal.payload] = undefined
+              gameRefs[dataVal.payload] = undefined
+              // Broadcast everyone else in lobby screen
+              wss.clients.forEach(client => {
+                if (client.id && !clientList[client.id].gameId) {
+                  client.send(JSON.stringify({msgType: 'lobbylist', payload: lobbies}))
+                }
+              })
             })
           }
           break
@@ -174,9 +184,13 @@ wss.on('connection', (socket, req) => {
               client.send(JSON.stringify({msgType: 'chatmsg', payload: {source: socket.alias || socket.id.slice(-4), message: dataVal.payload}}))
             }
           })
+          break
+        case 'clearGameId':
+          clientList[socket.id].gameId = null
       }
     }
     catch (e) {
+      console.error(e)
       socket.send(JSON.stringify({msgType: 'error', payload: 'Error when handing request: ' + e}))
       return
     }

@@ -1,6 +1,7 @@
 class Game {
-  constructor(prevState = null, sockets) {
+  constructor(prevState = null, sockets, endGameHandler) {
     this.sockets = sockets
+    this.endGameHandler = endGameHandler
     this.nextCreatureId = 0
     if (prevState) {
       this.state = state
@@ -328,7 +329,9 @@ class Game {
                     // Game ends!
                     this.state.phase = 'completed'
                     this.state.key++
+                    this.state.move = combatBlock.initiator
                     this.distributeState()
+                    this.endGameHandler()
                     return
                   }
                   defenderHealth[defenderHealth.length - 1].revealed = true
@@ -447,7 +450,7 @@ class Game {
               switch (spellBlock.spellCard.suit) {
                 case 'spade':
                   if (spellBlock.target) {
-                    if (spellBlock.spellCard.val > spellBlock.target.def.val || spellBlock.target.def.suit === 'spade') {
+                    if (spellBlock.spellCard.val >= spellBlock.target.def.val || spellBlock.target.def.suit === 'spade') {
                       this.destroyCreature(spellBlock.target.id)
                     }
                   }
@@ -461,9 +464,12 @@ class Game {
                         // Game ends!
                         this.state.phase = 'completed'
                         this.state.key++
+                        this.state.move = spellBlock.initiator
                         this.distributeState()
+                        this.endGameHandler()
                         return
                       }
+                      defenderHealth[defenderHealth.length - 1].revealed = true
                     }
                   }
                   this.state.move = spellBlock.initiator
@@ -579,14 +585,22 @@ class Game {
           this.state[player].creatures.forEach(c => c.tap = false)
           // They are passing soo
           this.state.turn++
+          this.state.key++
           this.state.move = this.otherPlayer(player)
           this.startTurnFor(this.state.move)
           this.distributeState()
         }
         break
+      case 'forfeit':
+        this.sockets[player].send(JSON.stringify({msgType: 'info', payload: 'You have forfeited the match.'}))
+        this.sockets[this.otherPlayer(player)].send(JSON.stringify({msgType: 'info', payload: 'Your opponent has forfeited the match.'}))
+        this.state.phase = 'completed'
+        this.state.move = this.otherPlayer(player)
+        this.state.key++
+        this.distributeState()
+        this.endGameHandler()
+        break
     }
-
-    
   }
 
   destroyCreature (id) {
@@ -639,7 +653,9 @@ class Game {
         if (stateBlock.health.length === 0) {
           // Active player loses
           this.state.phase = 'completed'
+          this.state.move = this.otherPlayer(player)
           this.distributeState()
+          this.endGameHandler()
           return
         }
         stateBlock.health[stateBlock.health.length - 1].revealed = true
