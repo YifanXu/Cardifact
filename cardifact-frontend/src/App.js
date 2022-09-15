@@ -1,6 +1,5 @@
 import './App.css';
 import Game from './Game'
-import testState from './gameState.json'
 import React from 'react'
 import Chat from './Chat';
 import Lobbylist from './Lobbylist';
@@ -25,7 +24,7 @@ class App extends React.Component {
   componentDidMount() {
     if (this.socket) return
     console.log('mount!')
-    let socket= new WebSocket(`ws://localhost:4000`)
+    let socket= new WebSocket(`ws://localhost:443`)
     socket.onerror = e => {
       this.addSysMsg({msgType: 'error', content: 'An error has occured with the websocket'})
       console.error(e)
