@@ -39,6 +39,12 @@ wss.on('connection', (socket, req) => {
     try {
       switch(dataVal.msgType) {
         case 'id':
+          let newClientBlock = {
+            socket,
+            gameId: null,
+            position: null,
+            alias: null,
+          };
           if (socket.id) {
             socket.send(JSON.stringify({msgType: 'error', payload: 'Id already set!'}))
             break
@@ -50,6 +56,9 @@ wss.on('connection', (socket, req) => {
 
             // Disconnect the previous socket if it still exists
             if (clientList[socket.id]) {
+              newClientBlock.gameId = clientList[socket.id].gameId
+              newClientBlock.position = clientList[socket.id].position
+              newClientBlock.alias = clientList[socket.id].alias
               clientList[socket.id].socket.send(JSON.stringify({
                 msgType: 'chatmsg', payload: {
                   timestamp: Date.now(),
@@ -60,16 +69,23 @@ wss.on('connection', (socket, req) => {
               }))
               clientList[socket.id].socket.close(1000, 'Another websocket with the same id was opened')
             }
+
+            if (newClientBlock.gameId) {
+              // Need to replace the socket reference in the game
+              if (lobbies[newClientBlock.gameId].players[0] === socket.id) {
+                gameRefs[newClientBlock.gameId].sockets.p1 = socket
+              }
+              else {
+                gameRefs[newClientBlock.gameId].sockets.p2 = socket
+              }
+            }
           }
           else {
             // The client does not have an id, so we need to generate a new one
             socket.id = randomUUID()
             socket.send(JSON.stringify({msgType: 'id', payload: socket.id}))
           }
-          clientList[socket.id] = {
-            socket,
-            gameId: null
-          }
+          clientList[socket.id] = newClientBlock
           clearTimeout(socket.connectionTimeout)
           break
         case 'lobbylist':
@@ -187,6 +203,7 @@ wss.on('connection', (socket, req) => {
           break
         case 'clearGameId':
           clientList[socket.id].gameId = null
+          clientList[socket.id].position = null
       }
     }
     catch (e) {
