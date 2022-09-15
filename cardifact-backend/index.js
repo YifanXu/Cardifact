@@ -17,7 +17,7 @@ const gameRefs = {}
 
 app.use('/', express.static('../cardifact-frontend/build'))
 
-server.listen(4000)
+server.listen(80)
 
 const wss = new WebSocketServer({server})
 wss.on('connection', (socket, req) => {
@@ -152,8 +152,9 @@ wss.on('connection', (socket, req) => {
             let res = gameRefs[gameId].handleAction(clientList[socket.id].position, dataVal.payload)
             if (res) socket.send(JSON.stringify(res))
           }
+          break
         case 'alias':
-          if (dataVal.payload && typeof dataVal.payload !== 'string' && dataVal.payload.trim().length !== 0) {
+          if (!dataVal.payload || typeof dataVal.payload !== 'string' || dataVal.payload.trim().length !== 0) {
             socket.send(JSON.stringify({msgType: 'error', payload: 'Alias must be a string'}))
           }
           else {
