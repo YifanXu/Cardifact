@@ -25,7 +25,7 @@ class App extends React.Component {
   componentDidMount() {
     if (this.socket) return
     console.log('mount!')
-    let socket= new WebSocket(`ws://localhost:8000`)
+    let socket= new WebSocket(`ws://localhost:4000`)
     socket.onerror = e => {
       this.addSysMsg({msgType: 'error', content: 'An error has occured with the websocket'})
       console.error(e)
@@ -59,16 +59,21 @@ class App extends React.Component {
             lobbies: msgJson.payload
           })
           break
-        case 'chatmsg':
-          this.setState({
-            chatlog: [...this.state.chatlog, msgJson.payload]
-          })
-          break
         case 'gameState':
           this.setState({
             gameState: msgJson.payload
           })
           break
+        case 'chatmsg':
+          this.setState({
+            chatlog: [...this.state.chatlog, {
+              timestamp: Date.now(),
+              source: msgJson.payload.source,
+              content: msgJson.payload.message,
+              msgType: msgJson.msgType,
+            }]
+          })
+            break
         case 'error':
         case 'info':
           this.setState({
@@ -107,26 +112,20 @@ class App extends React.Component {
   sendChatMsg (msg) {
     if (msg.startsWith('/')) {
       // This is a command
-      switch (msg) {
+      const args = msg.split(' ')
+      switch (args[0]) {
         case '/forceUpdate':
           this.sendGameAction('state')
+          break
+        case '/alias':
+          if (args[1]) this.sendToServer('alias', args[1])
           break
         default:
           this.addSysMsg({msgType: 'error', content: `Unknown command ${msg}`})
       }
     }
     else {
-      this.setState({
-        chatlog: [
-          ...this.state.chatlog,
-          {
-            timestamp: Date.now(),
-            source: 'You',
-            content: msg,
-            msgType: 'chatmsg'
-          }
-        ]
-      })
+      this.sendToServer('chatmsg', msg)
     }
   }
 

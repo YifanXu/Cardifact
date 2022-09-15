@@ -34,11 +34,6 @@ export default function Lobbylist (props) {
             </tr>
           </thead>
           <tbody>
-            <tr key='testCol'>
-              <td className='nameColumn'>Sick Name!</td>
-              <td className='timeColumn'>7:10:4</td>
-              <td className='statusColumn'>In Progress</td>
-            </tr>
             {Object.entries(props.lobbies).map(([lobbyName, info]) => <tr onClick={e => props.joinLobby(lobbyName)} key={lobbyName} className={(id && info.players.includes(id)) ? 'highlighted' : 'normal'}>
               <td className='nameColumn'>{lobbyName}</td>
               <td className='timeColumn'>{info.createdAt}</td>
