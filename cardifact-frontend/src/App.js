@@ -17,8 +17,8 @@ class App extends React.Component {
   }
   componentDidMount() {
     if (this.socket) return
-    console.log('mount!')
-    let socket= new WebSocket(`ws://localhost:443`)
+    console.log(`Connecting to Websocket at ws://${window.location.host}`)
+    let socket= new WebSocket(`ws://${window.location.host}`)
     socket.onerror = e => {
       this.addSysMsg({msgType: 'error', content: 'An error has occured with the websocket'})
       console.error(e)
