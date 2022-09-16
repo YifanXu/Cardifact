@@ -336,6 +336,7 @@ class Game {
                   }
                   defenderHealth[defenderHealth.length - 1].revealed = true
               }
+              this.applyBuff(this.state[combatBlock.initiator].creatures, combatBlock.attacker.id)
             }
             this.state.move = combatBlock.initiator
             this.state.subphase = 'standard'

@@ -196,7 +196,7 @@ wss.on('connection', (socket, req) => {
           
           const chatroomId = clientList[socket.id].gameId
           wss.clients.forEach(client => {
-            if ((!chatroomId && (!client.id || !clientList[client.id].gameId)) || chatroomId === clientList[client.id].gameId) {
+            if ((!chatroomId && (!client.id || !clientList[client.id].gameId || !lobbies[clientList[client.id].gameId].inGame)) || chatroomId === clientList[client.id].gameId) {
               client.send(JSON.stringify({msgType: 'chatmsg', payload: {source: socket.alias || socket.id.slice(-4), message: dataVal.payload}}))
             }
           })
