@@ -180,7 +180,7 @@ wss.on('connection', (socket, req) => {
           }
           break
         case 'alias':
-          if (!dataVal.payload || typeof dataVal.payload !== 'string' || dataVal.payload.trim().length !== 0) {
+          if (!dataVal.payload || typeof dataVal.payload !== 'string' || dataVal.payload.trim().length === 0) {
             socket.send(JSON.stringify({msgType: 'error', payload: 'Alias must be a string'}))
           }
           else {

@@ -31,10 +31,15 @@
 
 .health {
   border: 3px dotted red;
+  border-radius: 5px;
 }
 
 .health.targeted {
   animation: healthTargetCycle 2s infinite;
+}
+
+.health.combat {
+  border: 3px solid red;
 }
 
 @keyframes healthTargetCycle {

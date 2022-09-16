@@ -402,6 +402,12 @@ class Game extends React.Component {
       }
     }
 
+    // Calculate whether the health deck is in combat
+    let healthInCombat = 'none'
+    if (this.props.game && this.props.game.combatInfo && !this.props.game.combatInfo.defender) {
+      healthInCombat = this.props.game.combatInfo.initiator === this.props.game.packetFor ? 'enemy' : 'friendly'
+    }
+
     return (
       <div className="main">
         {/* <div className="enemyInfo">
@@ -410,7 +416,7 @@ class Game extends React.Component {
           <p>Your Turn</p>
         </div> */}
         <div className="enemyContainer">
-          <div className={`cardCollection enemy health ${enemyHealthTarget ? 'targeted' : ''}`}>
+          <div className={`cardCollection enemy health ${enemyHealthTarget ? 'targeted' : ''} ${healthInCombat === 'enemy' ? 'combat' : ''}`}>
             {this.buildCardCollection(this.props.game.enemy.health, 7, c=>c.revealed)}
           </div>
           <div className="enemyInfo">
@@ -428,7 +434,7 @@ class Game extends React.Component {
             {this.buildCreatureCollection(this.props.game.friendly.creatures, 5, this.state.selectedFriendlyCreature, i => this.handleCreatureClick(i, 'friendly', uiState))}
           </div>
         </div>
-        <div className={`cardCollection friendly health ${friendlyHealthTarget ? 'targeted' : ''}`}>
+        <div className={`cardCollection friendly health ${friendlyHealthTarget ? 'targeted' : ''} ${healthInCombat === 'friendly' ? 'combat' : ''}`}>
           {this.buildCardCollection(this.props.game.friendly.health, 7, c=>c.revealed)}
         </div>
         <div className="friendlyInfo">
